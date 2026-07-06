@@ -40,6 +40,7 @@ let
     export TERM=xterm
     export DBUS_SESSION_BUS_ADDRESS='unix:path=/run/dbus/system_bus_socket'
     export DISPLAY='${toString cfg.display}'
+    export LIBGL_ALWAYS_SOFTWARE=1
 
     export SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt
     export SSL_CERT_DIR=/etc/ssl/certs
@@ -75,6 +76,14 @@ let
     ln -s $(which env) /usr/bin/env
     ln -s $(which sh) /bin/sh
 
+    # PMHQ 配置：禁用 headless 模式
+    cat > /pmhq_config.json << PMHQEOF
+{
+  "headless": false,
+  "qq_console": true
+}
+PMHQEOF
+
     # llonebot 工作目录
     mkdir -p /root/llonebot
     cp -rf ${llonebot-js}/js/* /root/llonebot/
@@ -107,7 +116,7 @@ let
     chmod 1777 /tmp/.X11-unix
     
     createService xvfb "${pkgs.xorg.xorgserver}/bin/Xvfb ${toString cfg.display} -screen 0 1024x768x24 +extension GLX +render"
-    createService pmhq "${pmhq}/bin/pmhq --qq-path=\"$(jq -r '.qq_path' ${pmhq}/bin/config.json)\" --qq=\$ENV_QUICK_LOGIN_QQ"
+    createService pmhq "${pmhq}/bin/pmhq --config=/pmhq_config.json --qq-path=\"$(jq -r '.qq_path' ${pmhq}/bin/config.json)\" --qq=\$ENV_QUICK_LOGIN_QQ"
 
     createService llonebot "cd /root/llonebot && node --enable-source-maps llbot.js --pmhq-host=${cfg.pmhq_host} --pmhq-port=${toString cfg.pmhq_port}"
   '';

@@ -44,6 +44,7 @@
             copyToRoot = pkgs.buildEnv {
               name = "llonebot-env";
               paths = [
+                pkgs.mesa.drivers
                 llonebot-service
                 pkgs.coreutils
                 pkgs.bash
