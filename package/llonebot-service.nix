@@ -116,9 +116,19 @@ PMHQEOF
     chmod 1777 /tmp/.X11-unix
     
     createService xvfb "${pkgs.xorg.xorgserver}/bin/Xvfb ${toString cfg.display} -screen 0 1024x768x24 +extension GLX +render"
-    createService pmhq "${pmhq}/bin/pmhq --config=/pmhq_config.json --qq-path=\"$(jq -r '.qq_path' ${pmhq}/bin/config.json)\" --qq=\$ENV_QUICK_LOGIN_QQ"
 
-    createService llonebot "cd /root/llonebot && node --enable-source-maps llbot.js --pmhq-host=${cfg.pmhq_host} --pmhq-port=${toString cfg.pmhq_port}"
+    # QQ with libpmhq.so directly (NO source-pmhq — avoids --disable-gpu injection!)
+    # libpmhq.so starts its own WebSocket server on port 23456
+    QQ_PATH=$(jq -r '.qq_path' ${pmhq}/bin/config.json)
+    # Set up version config so QQ won't auto-update
+    _QQ_VER=$(grep -oP '"version"\s*:\s*"\K[^"]+' "$(dirname $QQ_PATH)/../resources/app/package.json" 2>/dev/null || echo "3.2.25-45758")
+    mkdir -p $HOME/.config/QQ/versions
+    cat > $HOME/.config/QQ/versions/config.json << EOF
+{"baseVersion": "$_QQ_VER", "curVersion": "$_QQ_VER"}
+EOF
+    LD_PRELOAD=${pmhq}/bin/libpmhq.so $QQ_PATH --no-sandbox &
+
+    createService llonebot "cd /root/llonebot && node --enable-source-maps llbot.js --pmhq-host=${cfg.pmhq_host} --pmhq-port=23456"
   '';
 
 in
