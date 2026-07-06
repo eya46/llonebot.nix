@@ -126,7 +126,7 @@ PMHQEOF
     cat > $HOME/.config/QQ/versions/config.json << EOF
 {"baseVersion": "$_QQ_VER", "curVersion": "$_QQ_VER"}
 EOF
-    LD_PRELOAD=${pmhq}/bin/libpmhq.so $QQ_PATH --no-sandbox &
+    createService qq "LD_PRELOAD=${pmhq}/bin/libpmhq.so $QQ_PATH --no-sandbox"
 
     createService llonebot "cd /root/llonebot && node --enable-source-maps llbot.js --pmhq-host=${cfg.pmhq_host} --pmhq-port=23456"
   '';
