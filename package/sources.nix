@@ -1,7 +1,7 @@
 { ... }:
 {
   # Updated by ./update.sh - do not update manually!
-  # Last updated: 2026-08-05.
+  # Last updated: 2026-08-08.
 
   # ./update.sh pmhq 2.0.0
   pmhq_version = "8.1.1";
@@ -10,7 +10,7 @@
   pmhq_arm64_url = "https://github.com/linyuchen/PMHQ/releases/download/v8.1.1/pmhq-linux-arm64.zip";
   pmhq_arm64_hash = "sha256-lUBJTxVLNueEauiKiPF5NR2hzlSLT9ADPPpygvfxoBc=";
   # ./update.sh llonebot 4.4.1
-  llonebot_version = "8.1.6";
-  llonebot_url = "https://github.com/LLOneBot/LLOneBot/releases/download/v8.1.6/LLBot.zip";
-  llonebot_hash = "sha256-p4gp6ERhloBKzyrZom/3oMrI6bmzaSim/c6etcpfGuA=";
+  llonebot_version = "8.1.7";
+  llonebot_url = "https://github.com/LLOneBot/LLOneBot/releases/download/v8.1.7/LLBot.zip";
+  llonebot_hash = "sha256-gbkNR2fKMvEURC1Vco0/J0hVomxDsbNHjt5xoQ2A91Q=";
 }
